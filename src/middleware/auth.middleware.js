@@ -24,7 +24,7 @@ async function authMiddleware(req, res, next) {
 
     try {
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
         const user = await userModel.findById(decoded.userId)
 
@@ -57,7 +57,8 @@ async function authSystemUserMiddleware(req, res, next) {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
         const user = await userModel.findById(decoded.userId).select("+systemUser")
         if (!user.systemUser) {
             return res.status(403).json({

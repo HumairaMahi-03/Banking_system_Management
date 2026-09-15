@@ -1,33 +1,31 @@
-const mongoose  = require('mongoose');
-const ledgerModel = require('./ledger.model');
+const mongoose = require("mongoose")
+const ledgerModel = require("./ledger.model")
 
 const accountSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: [true, 'User reference is required'],
+        ref: "user",
+        required: [ true, "Account must be associated with a user" ],
         index: true
     },
     status: {
         type: String,
-       enum :{
-            values: ['ACTIVE', 'FROZEN', 'CLOSED'],
-            message: "Status must be either 'ACTIVE', 'FROZEN', or 'CLOSED'"
-            
-        },default: 'ACTIVE'
+        enum: {
+            values: [ "ACTIVE", "FROZEN", "CLOSED" ],
+            message: "Status can be either ACTIVE, FROZEN or CLOSED",
+        },
+        default: "ACTIVE"
     },
     currency: {
         type: String,
-        required: [true, 'Currency is required'],
-        default: 'BTK'
+        required: [ true, "Currency is required for creating an account" ],
+        default: "INR"
     }
-
-    
-},{
+}, {
     timestamps: true
-});
+})
 
-accountSchema.index({ user: 1, currency: 1 });
+accountSchema.index({ user: 1, status: 1 })
 
 accountSchema.methods.getBalance = async function () {
 
@@ -72,8 +70,9 @@ accountSchema.methods.getBalance = async function () {
 
 }
 
-const accountModel = mongoose.model('Account', accountSchema);
+
+const accountModel = mongoose.model("account", accountSchema)
 
 
 
-module.exports = accountModel;
+module.exports = accountModel
